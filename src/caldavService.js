@@ -1,6 +1,5 @@
 // src/caldavService.js
-import * as dav from 'dav';
-import ICAL from 'ical.js';
+import IcalExpander from 'ical-expander';
 
 const username = process.env.REACT_APP_RADICALE_USERNAME;
 const password = process.env.REACT_APP_RADICALE_PASSWORD;
