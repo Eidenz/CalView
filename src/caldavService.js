@@ -6,6 +6,10 @@ const username = process.env.REACT_APP_RADICALE_USERNAME;
 const password = process.env.REACT_APP_RADICALE_PASSWORD;
 const serverUrl = process.env.REACT_APP_RADICALE_URL;
 
+if (!username || !password || !serverUrl) {
+  throw new Error("Missing environment variables for Radicale server credentials");
+}
+
 const fetchEvents = async () => {
   const xhr = new dav.transport.Basic(
     new dav.Credentials({
