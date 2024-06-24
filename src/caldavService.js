@@ -11,37 +11,37 @@ if (!username || !password || !serverUrl) {
 }
 
 const fetchEvents = async () => {
-  const xhr = new dav.transport.Basic(
-    new dav.Credentials({
-      username: username,
-      password: password,
-    })
-  );
+  try {
+    const response = await fetch(serverUrl, {
+      headers: {
+        'Authorization': 'Basic ' + btoa(username+':'+password),
+      }
+    });
 
-  const account = await dav.createAccount({
-    server: serverUrl,
-    xhr: xhr,
-    loadCollections: true,
-    loadObjects: true,
-  });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
-  const calendar = account.calendars[0];
-  const calendarEvents = calendar.objects.map((object) => {
-    const jcalData = ICAL.parse(object.calendarData);
-    const comp = new ICAL.Component(jcalData);
-    const vevent = comp.getFirstSubcomponent('vevent');
-    const event = new ICAL.Event(vevent);
-    return {
-      id: object.url.split('/').pop(), // This should be the filename
+    const icsData = await response.text();
+    const icalExpander = new IcalExpander({ ics: icsData, maxIterations: 1000 });
+    const events = icalExpander.all();
+
+    const calendarEvents = events.events.map(event => ({
+      id: event.uid,
       title: event.summary,
       startDate: event.startDate.toJSDate().toISOString(),
       endDate: event.endDate.toJSDate().toISOString(),
       description: event.description || '',
-      etag: object.etag, // Include the ETag
-    };
-  });
+      etag: event.etag || '', // Include the ETag if available
+    }));
 
-  return calendarEvents;
+    console.log(icsData);
+
+    return calendarEvents;
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    throw error;
+  }
 };
 
 const generateUUID = () => {
