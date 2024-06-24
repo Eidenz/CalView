@@ -1,0 +1,99 @@
+/* src/components/Calendar.css */
+.react-calendar {
+    width: 100%;
+    max-width: 800px;
+    background-color: #1a1a1a; /* Slightly darker background */
+    border: none;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 1rem; /* Add padding to the calendar */
+    border-radius: 8px; /* Optional: Add rounded corners */
+  }
+  
+  .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #1a1a1a; /* Slightly darker background */
+    color: white;
+  }
+  
+  .react-calendar__month-view__weekdays {
+    text-align: center;
+    font-weight: bold;
+    color: #ccc;
+  }
+  
+  .react-calendar__month-view__days__day {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    aspect-ratio: 1 / 1; /* Make the tiles square */
+    color: white; /* Ensure all days are white */
+  }
+
+  .react-calendar__tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .react-calendar__tile > abbr {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .react-calendar__tile--now {
+    background: #333;
+    color: white;
+  }
+  
+  .react-calendar__tile--active {
+    background: #3a3a3a;
+    color: white;
+  }
+  
+  .react-calendar__tile--hover {
+    background: #444;
+  }
+  
+  .react-calendar__month-view__days__day--weekend {
+    color: white; /* Ensure weekend numbers are not red */
+  }
+  
+  .event-dot {
+    position: absolute;
+    top: calc(50% + 12px);  /* Position it 12px below the center */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: red;
+    border-radius: 50%;
+  }
+  
+  /* Ensure the layout doesn't change with window size */
+  @media screen and (max-width: 600px) {
+    .event-dot {
+      top: calc(50% + 8px);  /* Adjust for smaller screens */
+    }
+  }
+
+  .react-calendar__navigation button {
+    min-width: 44px;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 16px;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+  
+  .react-calendar__navigation button:disabled {
+    background-color: #f0f0f0;
+  }

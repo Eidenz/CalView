@@ -1,0 +1,10 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_RADICALE_USERNAME=${RADICALE_USERNAME}
+      - REACT_APP_RADICALE_PASSWORD=${RADICALE_PASSWORD}
+      - REACT_APP_RADICALE_URL=${RADICALE_URL}
