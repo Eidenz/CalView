@@ -13,8 +13,16 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Pass build-time variables
+ARG REACT_APP_RADICALE_USERNAME
+ARG REACT_APP_RADICALE_PASSWORD
+ARG REACT_APP_RADICALE_URL
+
 # Build the React app
-RUN npm run build
+RUN REACT_APP_RADICALE_USERNAME=$REACT_APP_RADICALE_USERNAME \
+    REACT_APP_RADICALE_PASSWORD=$REACT_APP_RADICALE_PASSWORD \
+    REACT_APP_RADICALE_URL=$REACT_APP_RADICALE_URL \
+    npm run build
 
 # Use an official Nginx image to serve the static files
 FROM nginx:alpine
