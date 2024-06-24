@@ -92,18 +92,33 @@ function App() {
   const calendarRef = useRef(null);
   const eventDetailsRef = useRef(null);
 
+  const selectToday = (eventsData) => {
+    const today = new Date();
+    const todayEvents = eventsData.filter(
+      (event) => new Date(event.startDate).toDateString() === today.toDateString()
+    );
+    setSelectedEvents(todayEvents);
+    setActiveStartDate(today);
+    setSelectedDate(today);
+    setResetPage((prev) => !prev);
+    if (calendarRef.current && calendarRef.current.getApi) {
+      calendarRef.current.getApi().gotoDate(today);
+    }
+  };
+
   useEffect(() => {
     const fetchAndSetEvents = async () => {
       setLoading(true);
-      const calendarEvents = await fetchEvents();
-      setEvents(calendarEvents);
-      const today = new Date();
-      const todayEvents = calendarEvents.filter(
-        (event) => new Date(event.date).toDateString() === today.toDateString()
-      );
-      setSelectedEvents(todayEvents);
-      setSelectedDate(today);
-      setLoading(false);
+      try {
+        const calendarEvents = await fetchEvents();
+        setEvents(calendarEvents);
+        selectToday(calendarEvents); // Call selectToday with fetched events
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+        toast.error('Failed to fetch events. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchAndSetEvents();
@@ -117,13 +132,7 @@ function App() {
         eventDetailsRef.current &&
         !eventDetailsRef.current.contains(event.target)
       ) {
-        const today = new Date();
-        const todayEvents = events.filter(
-          (event) => new Date(event.date).toDateString() === today.toDateString()
-        );
-        setSelectedEvents(todayEvents);
-        setActiveStartDate(today); // Reset the calendar view to the current date
-        setSelectedDate(today);
+        selectToday(events);
       }
     };
 
@@ -180,19 +189,14 @@ function App() {
   const handleDeleteEvent = async (eventToDelete) => {
     try {
       await deleteEventFromRadicale(eventToDelete.id);
-      setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToDelete.id));
-      setSelectedEvents(prevSelectedEvents => prevSelectedEvents.filter(event => event.id !== eventToDelete.id));
       toast.success('Event deleted successfully!');
     } catch (error) {
-      console.error('Failed to delete event:', error);
-      if (error.message === 'Event not found') {
-        // If the event is not found on the server, remove it from the local state
-        setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToDelete.id));
-        setSelectedEvents(prevSelectedEvents => prevSelectedEvents.filter(event => event.id !== eventToDelete.id));
-        toast.warning('Event not found on server. Removed from local calendar.');
-      } else {
-        toast.error('Failed to delete event. Please try again.');
-      }
+      console.error('Failed to delete event from server:', error);
+      toast.warning('It seems event is already deleted on server, deleting locally.');
+    } finally {
+      // Remove the event from local state regardless of server success
+      setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToDelete.id));
+      setSelectedEvents(prevSelectedEvents => prevSelectedEvents.filter(event => event.id !== eventToDelete.id));
     }
   };
 
