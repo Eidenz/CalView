@@ -180,14 +180,19 @@ function App() {
   const handleDeleteEvent = async (eventToDelete) => {
     try {
       await deleteEventFromRadicale(eventToDelete.id);
-      
       setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToDelete.id));
       setSelectedEvents(prevSelectedEvents => prevSelectedEvents.filter(event => event.id !== eventToDelete.id));
-      
       toast.success('Event deleted successfully!');
     } catch (error) {
       console.error('Failed to delete event:', error);
-      toast.error('Failed to delete event. Please try again.');
+      if (error.message === 'Event not found') {
+        // If the event is not found on the server, remove it from the local state
+        setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToDelete.id));
+        setSelectedEvents(prevSelectedEvents => prevSelectedEvents.filter(event => event.id !== eventToDelete.id));
+        toast.warning('Event not found on server. Removed from local calendar.');
+      } else {
+        toast.error('Failed to delete event. Please try again.');
+      }
     }
   };
 

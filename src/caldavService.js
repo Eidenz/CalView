@@ -34,8 +34,6 @@ const fetchEvents = async () => {
       etag: event.etag || '', // Include the ETag if available
     }));
 
-    console.log(icsData);
-
     return calendarEvents;
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -51,27 +49,22 @@ const generateUUID = () => {
 };
 
 const saveEventToRadicale = async (event) => {
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  };
+  const eventId = event.id || generateUUID();
+  const filename = `${eventId}.ics`;
+  const url = `${serverUrl}${filename}`;
 
   const icalString = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//hacksw/handcal//NONSGML v1.0//EN
 BEGIN:VEVENT
-UID:${event.id || generateUUID()}
-DTSTAMP:${formatDate(new Date())}
-DTSTART:${formatDate(event.startDate)}
-DTEND:${formatDate(event.endDate)}
+UID:${eventId}
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}
+DTSTART:${new Date(event.startDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}
+DTEND:${new Date(event.endDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}
 SUMMARY:${event.title || ''}
 DESCRIPTION:${event.description || ''}
 END:VEVENT
 END:VCALENDAR`;
-
-  const eventId = event.id || generateUUID();
-  const filename = `${eventId}.ics`;
-  const url = `${serverUrl}${filename}`;
 
   try {
     const response = await fetch(url, {
@@ -95,14 +88,14 @@ END:VCALENDAR`;
   }
 };
 
-const deleteEventFromRadicale = async (filename) => {
-  const url = `${serverUrl}${filename}`;
+const deleteEventFromRadicale = async (eventId) => {
+  const url = `${serverUrl}${eventId}.ics`;
 
   try {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        'Authorization': 'Basic ' + btoa(username + ':' + password)
+        'Authorization': 'Basic ' + btoa(`${username}:${password}`),
       },
     });
 
