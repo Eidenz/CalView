@@ -1,5 +1,5 @@
-# React Calendar App with Radicale Integration
-This application is a React-based calendar that integrates with a Radicale CalDAV server. It allows users to view, create, edit, and delete events, all synchronized with a Radicale backend.
+# CalView
+CalView is a React-based calendar that integrates with a Radicale CalDAV server. It allows users to view, create, edit, and delete events, all synchronized with a Radicale backend.
 
 ## Features
 - View calendar events
@@ -10,7 +10,7 @@ This application is a React-based calendar that integrates with a Radicale CalDA
 
 ## Prerequisites
 - Docker and Docker Compose
-- A running Radicale CalDAV server behind a reverse proxy (e.g. Nginx)
+- A running Radicale CalDAV server with CORS headers configured
 
 ## Installation
 - Clone the repository:
