@@ -14,8 +14,10 @@ CalView is a React-based calendar that integrates with a Radicale CalDAV server.
 
 ## Installation
 - Clone the repository:
-`git clone https://github.com/yourusername/react-calendar-app.git`
-`cd react-calendar-app`
+  
+`git clone https://github.com/Eidenz/CalView.git`
+
+`cd CalView`
 
 - Create a .env file in the root directory with the following content:
 ```
@@ -25,7 +27,9 @@ REACT_APP_RADICALE_URL=http://your_radicale_server_url:5232/your_calendar_path/
 ```
 
 - Build and run the Docker container:
+
 `docker-compose build`
+
 `docker-compose up`
 
 The application should now be running at http://localhost/ (or whatever port you've specified in your Docker configuration).
