@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# React Calendar App with Radicale Integration
+This application is a React-based calendar that integrates with a Radicale CalDAV server. It allows users to view, create, edit, and delete events, all synchronized with a Radicale backend.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Features
+- View calendar events
+- Create new events
+- Edit existing events
+- Delete events
+- Synchronization with Radicale CalDAV server
 
-## Available Scripts
+## Prerequisites
+- Docker and Docker Compose
+- A running Radicale CalDAV server behind a reverse proxy (e.g. Nginx)
 
-In the project directory, you can run:
+## Installation
+- Clone the repository:
+`git clone https://github.com/yourusername/react-calendar-app.git`
+`cd react-calendar-app`
 
-### `npm start`
+- Create a .env file in the root directory with the following content:
+```
+REACT_APP_RADICALE_USERNAME=your_username
+REACT_APP_RADICALE_PASSWORD=your_password
+REACT_APP_RADICALE_URL=http://your_radicale_server_url:5232/your_calendar_path/
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Build and run the Docker container:
+`docker-compose build`
+`docker-compose up`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The application should now be running at http://localhost/ (or whatever port you've specified in your Docker configuration).
 
-### `npm test`
+## Usage
+- Click on a day to view events for that day
+- Double-click on a day to create a new event
+- Click on an event in the list to view its details
+- Use the edit and delete buttons in the event details panel to modify or remove events
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Development
+To run the application in development mode:
+Install dependencies:
+`npm install`
 
-### `npm run build`
+Start the development server:
+`npm start`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The application will be available at http://localhost:3000
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Building for Production
+To build the application for production:
+Run the build command:
+`npm run build`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The production-ready files will be in the build directory
 
-### `npm run eject`
+## Docker Deployment
+The application includes a Dockerfile and docker-compose.yml for easy deployment. To deploy:
+Ensure Docker and Docker Compose are installed on your system
+Run `docker compose up --build`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+This project is licensed under the MIT License.
