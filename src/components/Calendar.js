@@ -43,11 +43,35 @@ function CustomCalendar({ onSelectEvent, onDoubleClickDay, activeStartDate, sele
 
   const tileContent = ({ date, view }) => {
     if (view === 'month') {
-      const hasEvent = events.some(event => 
-        new Date(event.startDate).toDateString() === date.toDateString()
-      );
-      if (hasEvent) {
-        return <div className="event-dot"></div>;
+      const event = events.find(event => {
+        const eventStartDate = new Date(event.startDate);
+        const eventEndDate = new Date(event.endDate);
+  
+        // Strip the time component by setting hours, minutes, seconds, and milliseconds to zero
+        eventStartDate.setHours(0, 0, 0, 0);
+        eventEndDate.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+  
+        return date >= eventStartDate && date <= eventEndDate;
+      });
+  
+      if (event) {
+        const eventStartDate = new Date(event.startDate);
+        const eventEndDate = new Date(event.endDate);
+  
+        eventStartDate.setHours(0, 0, 0, 0);
+        eventEndDate.setHours(0, 0, 0, 0);
+  
+        if (eventStartDate.getTime() === eventEndDate.getTime()) {
+          // Single-day event
+          return <div className="event-dot"></div>;
+        } else if (date.getTime() === eventStartDate.getTime()) {
+          return <div className="event-start"></div>;
+        } else if (date.getTime() === eventEndDate.getTime()) {
+          return <div className="event-end"></div>;
+        } else {
+          return <div className="event-middle"></div>;
+        }
       }
     }
     return null;

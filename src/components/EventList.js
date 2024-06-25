@@ -1,7 +1,7 @@
 // src/components/EventList.js
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 
 const ListContainer = styled.div`
   background-color: #1e1e1e;
@@ -123,7 +123,13 @@ function EventList({ onSelectEvent, events }) {
         {currentEvents.map((event) => (
           <EventItem key={event.id} onClick={() => onSelectEvent(event)}>
             <EventTitle>{event.title}</EventTitle>
-            <EventDate>{format(new Date(event.startDate), 'dd/MM/yyyy HH:mm')}</EventDate>
+            <EventDate>
+              {format(new Date(event.startDate), 'dd/MM/yyyy HH:mm')}
+              {!isSameDay(new Date(event.startDate), new Date(event.endDate)) &&
+                ` - ${format(new Date(event.endDate), 'dd/MM/yyyy HH:mm')}`}
+              {isSameDay(new Date(event.startDate), new Date(event.endDate)) &&
+                `-${format(new Date(event.endDate), 'HH:mm')}`}
+            </EventDate>
           </EventItem>
         ))}
       </EventsWrapper>
