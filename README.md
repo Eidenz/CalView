@@ -5,6 +5,7 @@ CalView is a React-based calendar that integrates with a Radicale CalDAV server.
 
 ## Features
 - View calendar events
+- Supports multi-day events
 - Create new events
 - Edit existing events
 - Delete events
