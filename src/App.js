@@ -95,7 +95,9 @@ function App() {
   const selectToday = (eventsData) => {
     const today = new Date();
     const todayEvents = eventsData.filter(
-      (event) => new Date(event.startDate).toDateString() === today.toDateString()
+      (event) => 
+        new Date(event.startDate).toDateString() === today.toDateString() ||
+        isEventOngoing(event, today)
     );
     setSelectedEvents(todayEvents);
     setActiveStartDate(today);
@@ -144,13 +146,21 @@ function App() {
 
   const handleSelectEvent = (event) => {
     const eventDate = new Date(event.startDate);
-    const dayEvents = events.filter(
-      (e) => new Date(e.startDate).toDateString() === eventDate.toDateString()
+    const relevantEvents = events.filter(
+      (e) => 
+        new Date(e.startDate).toDateString() === eventDate.toDateString() ||
+        isEventOngoing(e, eventDate)
     );
-    setSelectedEvents(dayEvents);
+    setSelectedEvents(relevantEvents);
     setActiveStartDate(eventDate);
     setSelectedDate(eventDate);
     setResetPage((prev) => !prev);
+  };
+
+  const isEventOngoing = (event, date) => {
+    const eventStart = new Date(event.startDate);
+    const eventEnd = new Date(event.endDate);
+    return date >= eventStart && date <= eventEnd;
   };
 
   const handleActiveStartDateChange = ({ activeStartDate }) => {
@@ -202,10 +212,12 @@ function App() {
 
   const handleDateClick = (date) => {
     const clickedDate = new Date(date);
-    const dayEvents = events.filter(
-      (e) => new Date(e.startDate).toDateString() === clickedDate.toDateString()
+    const relevantEvents = events.filter(
+      (event) => 
+        new Date(event.startDate).toDateString() === clickedDate.toDateString() ||
+        isEventOngoing(event, clickedDate)
     );
-    setSelectedEvents(dayEvents);
+    setSelectedEvents(relevantEvents);
     setActiveStartDate(clickedDate);
     setSelectedDate(clickedDate);
     setResetPage((prev) => !prev);
