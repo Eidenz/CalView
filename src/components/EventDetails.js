@@ -38,12 +38,6 @@ const EventDate = styled.div`
   margin-bottom: 10px;
 `;
 
-const EventDescription = styled.div`
-  font-size: 1rem;
-  color: #ccc;
-  margin-bottom: 10px;
-`;
-
 const DescriptionItem = styled.div`
   margin-bottom: 10px;
   word-wrap: break-word; /* Ensure the description wraps if too long */
@@ -128,28 +122,7 @@ const EventContent = styled.div`
   flex-grow: 1;
   overflow-y: auto;
   margin-bottom: 10px; // Add some space between content and bottom controls
-`;
-
-const DeleteButton = styled.button`
-  background-color: transparent;
-  border: none;
-  border-radius: 50%;
-  color: #ff4136;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-  margin-bottom: 10px;
-  align-self: center; // Center the delete button
-  margin-bottom: 5px; // Add a small margin below the delete button
-  
-  &:hover {
-    background-color: #ff4136;
-    color: #ffffff;
-  }
+  width: 100%;
 `;
 
 const BoldTime = styled.span`
@@ -185,10 +158,24 @@ function parseDescription(description) {
     if (colonIndex !== -1) {
       const [label, ...value] = line.split(':');
       currentLabel = label.trim();
-      parsedDescription[currentLabel] = value.join(':').trim();
+      if(currentLabel.includes('http')){
+        currentLabel = ' ';
+        parsedDescription[currentLabel] = line.trim();
+      }
+      else{
+        let linevalue = value.join(':').trim();
+        if (linevalue == 'null' || linevalue == 'undefined'){
+          linevalue = '-';
+        }
+        parsedDescription[currentLabel] = linevalue;
+      }
     } else if (currentLabel) {
       // If there's no colon, append to the current label's value
-      parsedDescription[currentLabel] = (parsedDescription[currentLabel] || '') + ' ' + line.trim();
+      let linevalue = line.trim();
+      if (linevalue == 'null' || linevalue == 'undefined'){
+        linevalue = '-';
+      }
+      parsedDescription[currentLabel] = (parsedDescription[currentLabel] || '') + ' ' + linevalue;
     }
   });
 
@@ -231,13 +218,6 @@ function EventDetails({ events = [], resetPage, onDeleteEvent, onEditEvent }) {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const handleDeleteEvent = () => {
-    const currentEvent = sortedEvents[currentPage - 1];
-    if (currentEvent && onDeleteEvent) {
-      onDeleteEvent(currentEvent);
-    }
   };
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

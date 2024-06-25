@@ -97,7 +97,13 @@ function EventList({ onSelectEvent, events }) {
     };
   }, []);
 
-  const sortedEvents = events.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  // Filter out past events
+  const currentAndFutureEvents = events.filter(event => {
+    const eventEndDate = new Date(event.endDate || event.startDate);
+    return eventEndDate >= new Date();
+  });
+
+  const sortedEvents = currentAndFutureEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
   const totalPages = Math.ceil(sortedEvents.length / itemsPerPage);
 
   const handlePreviousPage = () => {
@@ -121,6 +127,10 @@ function EventList({ onSelectEvent, events }) {
           </EventItem>
         ))}
       </EventsWrapper>
+      { currentEvents.length === 0 ?
+      <ListContainer ref={listContainerRef}>
+        <EventItem>No upcoming events</EventItem>
+      </ListContainer> :
       <PaginationContainer>
         <PaginationButton onClick={handlePreviousPage} disabled={currentPage === 1}>
           &larr;
@@ -130,6 +140,7 @@ function EventList({ onSelectEvent, events }) {
           &rarr;
         </PaginationButton>
       </PaginationContainer>
+      }
     </ListContainer>
   );
 }
